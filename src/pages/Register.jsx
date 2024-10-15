@@ -1,8 +1,8 @@
 const Register = () => {
   return (
-    <div>
-      <div>
-        <span> Chat App </span>
+    <div className=" h-min-[100vh] flex justify-center items-center p-4  bg-slate-600  ">
+      <div className="flex flex-col items-center gap-3 ">
+        <span className="text-3xl"> Chat App </span>
         <span> Register </span>
         <form>
           <input type="text" placeholder="enter your name " />
