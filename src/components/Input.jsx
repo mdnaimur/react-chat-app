@@ -5,7 +5,7 @@ const Input = () => {
   return (
     <div className="flex h-12 bg-white text-black items-center justify-between p-3">
       <input
-        className="  outline-none border-none text-xl"
+        className="  outline-none border-none text-sm"
         type="text"
         placeholder="Type something..."
       />

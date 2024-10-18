@@ -9,7 +9,7 @@ const Message = () => {
         />
         <span>just now</span>
       </div>
-      <div className="min-w-[80%] flex gap-3">
+      <div className="max-w-[80%] flex flex-col gap-3">
         <p className="max-h-screen py-3 px-5 rounded-r rounded-b rounded-br-2xl">
           lorem some text some text some test
         </p>
