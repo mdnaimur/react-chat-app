@@ -1,11 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
-import { auth, db, storage } from "../firebase.js";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { auth, db, storage } from "../firebase.js";
 
-import Add from "../img/addAvatar.png";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Add from "../img/addAvatar.png";
+
+// import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const Register = () => {
   const [error, setError] = useState(false);
@@ -22,14 +24,41 @@ const Register = () => {
     try {
       // create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      const date = new Date().getTime();
-      const storageRef = ref(storage, `${displayName + date}`);
-      console.log(storageRef);
+      //const date = new Date().getTime();
+      //const storageRef = ref(storage, `${displayName + date}`);
 
-      await uploadBytesResumable(storageRef, file).then(() => {
-        getDownloadURL(storageRef).then(async (downloadURL) => {
-          try {
-            // Update profile
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      const storageRef = ref(storage, displayName);
+      console.log(storageRef);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => {
+          setError(true);
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case "storage/unauthorized":
+              // User doesn't have permission to access the object
+              break;
+            case "storage/canceled":
+              // User canceled the upload
+              break;
+
+            // ...
+
+            case "storage/unknown":
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            console.log("File available at", downloadURL);
             await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
@@ -44,13 +73,35 @@ const Register = () => {
             await setDoc(doc(db, "userChats", res.user.uid), {});
 
             navigate("/");
-          } catch (error) {
-            console.log(error);
-            setError(true);
-            setLoading(false);
-          }
-        });
-      });
+          });
+        }
+      );
+
+      // await uploadBytesResumable(storageRef, file).then(() => {
+      //   getDownloadURL(storageRef).then(async (downloadURL) => {
+      //     try {
+      //       // Update profile
+      //       await updateProfile(res.user, {
+      //         displayName,
+      //         photoURL: downloadURL,
+      //       });
+      //       await setDoc(doc(db, "users", res.user.uid), {
+      //         uid: res.user.uid,
+      //         displayName,
+      //         email,
+      //         photoURL: downloadURL,
+      //       });
+      //       //create empty user chats on firestore
+      //       await setDoc(doc(db, "userChats", res.user.uid), {});
+
+      //       navigate("/");
+      //     } catch (error) {
+      //       console.log(error);
+      //       setError(true);
+      //       setLoading(false);
+      //     }
+      //   });
+      // });
     } catch (error) {
       console.log(error);
       setError(true);
