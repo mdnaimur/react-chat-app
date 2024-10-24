@@ -1,10 +1,10 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../firebase.js";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Add from "../img/addAvatar.png";
 
 // import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -76,34 +76,7 @@ const Register = () => {
           });
         }
       );
-
-      // await uploadBytesResumable(storageRef, file).then(() => {
-      //   getDownloadURL(storageRef).then(async (downloadURL) => {
-      //     try {
-      //       // Update profile
-      //       await updateProfile(res.user, {
-      //         displayName,
-      //         photoURL: downloadURL,
-      //       });
-      //       await setDoc(doc(db, "users", res.user.uid), {
-      //         uid: res.user.uid,
-      //         displayName,
-      //         email,
-      //         photoURL: downloadURL,
-      //       });
-      //       //create empty user chats on firestore
-      //       await setDoc(doc(db, "userChats", res.user.uid), {});
-
-      //       navigate("/");
-      //     } catch (error) {
-      //       console.log(error);
-      //       setError(true);
-      //       setLoading(false);
-      //     }
-      //   });
-      // });
     } catch (error) {
-      console.log(error);
       setError(true);
       setLoading(false);
     }
@@ -146,7 +119,7 @@ const Register = () => {
         </form>
         <p className="w-full p-3 border border-gray-300 rounded-md">
           You do have an account?
-          {/* <Link to="/">Login</Link> */}
+          <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
