@@ -46,7 +46,6 @@ const Chat = () => {
             <div>
               <span className="text-sm font-bold text-slate-950  order-1">
                 {" "}
-                {console.log(chat[1].userInfo.displayName)}
                 {chat[1].userInfo.displayName}{" "}
               </span>
               <p>{chat[1].lastMessage?.text}</p>
