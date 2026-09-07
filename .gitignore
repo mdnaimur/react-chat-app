@@ -1,5 +1,33 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+**/node_modules/
+
+# =========================
+# Build output
+# =========================
+dist/
+build/
+coverage/
+**/dist/
+**/build/
+**/coverage/
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# Local overrides
+*.local
+
+# =========================
 # Logs
-logs
+# =========================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,18 +35,41 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# =========================
+# Runtime files
+# =========================
+*.pid
+*.seed
+*.pid.lock
 
-# Editor directories and files
+# =========================
+# Vite
+# =========================
+dist-ssr/
+.vite/
+
+# =========================
+# Editor / IDE
+# =========================
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+
+# =========================
+# OS files
+# =========================
 .DS_Store
+Thumbs.db
+
+# =========================
+# Visual Studio
+# =========================
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+
+# =========================
+# Temporary files
+# =========================
 *.sw?
