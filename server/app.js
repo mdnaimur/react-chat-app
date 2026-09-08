@@ -19,6 +19,8 @@ import {
 } from './middlewares/common/errorHandler.js';
 
 import loginRouter from './routers/loginRouter.js';
+import inboxRouter from './routers/inboxRouter.js';
+import usersRouter from './routers/usersRouter.js';
 
 const app = express();
 
@@ -49,6 +51,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // route setup
 app.use('/', loginRouter);
+app.use('/users', usersRouter);
+app.use('/inbox', inboxRouter);
 
 // error hanlding
 
