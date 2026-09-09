@@ -1,18 +1,24 @@
-# React + Vite
+# Chat APPLICATION
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Frontend- Client Side
+  - Reactjs
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
+## Backend - Server side
+  - Expressjs
 
 
 
-Yes. For a project where **Express.js backend + React frontend work together**, I recommend keeping them in **one Git repository (monorepo)**.
+# Cover - Server side
+1. ExpressJs
+2. Router
+3. MVC pattern
+4. MongoDb
+5. validation - validator expres
+6. Multer (multi file, file size limit)
+7. 
 
-## Recommended structure
+
+##  structure
 
 ```text
 my-project/
@@ -57,7 +63,7 @@ my-project/
           │ HTTP/API                │
           └──────────→←─────────────┘
                        │
-                   PostgreSQL
+                   MongoDB/ PostgreSQL
 ```
 
 For example:
@@ -69,7 +75,7 @@ GET /api/tasks
   ↓
 Express
   ↓
-PostgreSQL
+PostgreSQL / MongoDB
   ↓
 Express
   ↓
@@ -87,7 +93,7 @@ React
 localhost:5173
 
 Express
-localhost:3000
+localhost:5000
 ```
 
 React calls:
@@ -106,53 +112,6 @@ instead of hardcoding the backend URL.
 
 ---
 
-## Git workflow
-
-You commit both applications together:
-
-```bash
-git add .
-git commit -m "feat: add task creation API and UI"
-git push
-```
-
-A feature might change both:
-
-```text
-client/src/pages/Tasks.jsx
-        +
-server/src/routes/taskRoutes.js
-        +
-server/src/controllers/taskController.js
-```
-
-That's one advantage of a monorepo: **frontend and backend changes for the same feature stay together.**
-
----
-
-## Root `.gitignore`
-
-```gitignore
-node_modules/
-.env
-.env.*
-dist/
-build/
-coverage/
-*.log
-```
-
-Don't commit:
-
-```text
-.env
-node_modules/
-```
-
----
-
-## Should you have one `package.json` or two?
-
 For your case:
 
 ```text
@@ -169,7 +128,7 @@ my-project/
 
 React and Express have different dependencies.
 
-Later, you can add a root `package.json` to run both together:
+Later,  can add a root `package.json` to run both together:
 
 ```json
 {
@@ -202,6 +161,3 @@ my-app/
 └── package.json  ← optional orchestration
 ```
 
-**Don't put React inside the Express `src/` directory.** Keep the frontend and backend clearly separated.
-
-For a full-stack project, this is probably the cleanest structure to learn with and later showcase on GitHub.

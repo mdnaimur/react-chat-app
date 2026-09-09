@@ -9,12 +9,19 @@ import createHttpError from 'http-errors';
 
 // 404 not found handler
 export function notFoundHandler(req, res, next) {
+  if (req.originalUrl !== '/.well-known/appspecific/com.chrome.devtools.json') {
+    console.log('404 URL:', req.method, req.originalUrl);
+  }
+
   next(createHttpError(404, 'Your requested content page was not found'));
 }
 
 // default error handler
 
 export function errorHandler(err, req, res, next) {
+  console.error('========== ERROR ==========');
+  console.error(err);
+  console.error('===========================');
   const statusCode = err.status || 500;
 
   res.locals.error =
