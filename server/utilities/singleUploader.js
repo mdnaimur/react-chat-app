@@ -26,7 +26,6 @@ export default function uploader(
   }
 
   // define the storage
-  console.log('[2] Single Uploader  HIT');
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {

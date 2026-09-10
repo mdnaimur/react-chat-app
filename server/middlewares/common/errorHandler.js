@@ -19,9 +19,9 @@ export function notFoundHandler(req, res, next) {
 // default error handler
 
 export function errorHandler(err, req, res, next) {
-  console.error('========== ERROR ==========');
-  console.error(err);
-  console.error('===========================');
+  // console.error('========== ERROR ==========');
+  // console.error(err);
+  // console.error('===========================');
   const statusCode = err.status || 500;
 
   res.locals.error =

@@ -64,7 +64,6 @@ const addUserValidators = [
 ];
 
 const addUserValidationHandler = function (req, res, next) {
-  console.log('[3] user validationhandler hit');
   const errors = validationResult(req);
   const mappedErrors = errors.mapped();
 

@@ -9,7 +9,6 @@
 import uploader from '../../utilities/singleUploader.js';
 
 export default function avatarUpload(req, res, next) {
-  console.log('[1] Avatart Upload HIT');
   const upload = uploader(
     'avatars',
     ['image/jpeg', 'image/jpg', 'image/png'],
@@ -17,15 +16,9 @@ export default function avatarUpload(req, res, next) {
     'Only .jpg jpeg  or.png format allowed!!',
   );
 
-  console.log('[2] uploader created:', !!upload);
-
   const uploadMiddleware = upload.any();
 
-  console.log('[3] upload middleware created');
   uploadMiddleware(req, res, (err) => {
-    console.log('[4] Multer callback HIT');
-    console.error('MULTER ERROR:', err);
-
     if (err) {
       return res.status(500).json({
         errors: {
@@ -36,8 +29,8 @@ export default function avatarUpload(req, res, next) {
       });
     }
 
-    console.log('[5] Upload successful');
-    console.log('Files:', req.files);
+    // console.log('[5] Upload successful');
+    // console.log('Files:', req.files);
 
     next();
   });
