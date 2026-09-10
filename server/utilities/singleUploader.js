@@ -21,9 +21,6 @@ export default function uploader(
 ) {
   // file upload folder
   const UPLOADS_FOLDER = `${__dirname}/../public/uploads/${subfolder_path}/`;
-  if (!UPLOADS_FOLDER) {
-    console.log('UPLOAD folder error');
-  }
 
   // define the storage
 
@@ -32,7 +29,7 @@ export default function uploader(
       cb(null, UPLOADS_FOLDER);
     },
     filename: (req, file, cb) => {
-      console.log(`inside singleUploader check file req: ${req.file}`);
+      console.log('File:', file);
       const fileExt = path.extname(file.originalname);
       const fileName =
         file.originalname

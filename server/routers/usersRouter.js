@@ -18,11 +18,13 @@ import {
   addUserValidationHandler,
 } from '../middlewares/users/userValidators.js';
 
+import { checkLogin } from '../middlewares/common/checkLogin.js';
+
 const router = express.Router();
 
 // user router
 
-router.get('/', decorateHtmlResponse('Users'), getUsers);
+router.get('/', decorateHtmlResponse('Users'), checkLogin, getUsers);
 
 router.post(
   '/',

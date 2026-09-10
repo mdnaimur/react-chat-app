@@ -8,10 +8,12 @@
 // extranal import
 import jwt from 'jsonwebtoken';
 
-const checkLogin = (req, res, next) => {
+export const checkLogin = (req, res, next) => {
   let cookies =
     Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
-  console.log(`Cookies check frm checkloging ${cookies}`);
+  //   console.log(`Cookies check frm checkloging ${cookies}`);
+
+  console.log('Cookies:', cookies);
 
   if (cookies) {
     try {
@@ -56,5 +58,3 @@ export const redirectLoggedIn = function (req, res, next) {
     res.redirect('/inbox');
   }
 };
-
-export default checkLogin;
