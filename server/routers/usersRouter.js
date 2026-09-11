@@ -7,10 +7,32 @@
 
 import express from 'express';
 import { decorateHtmlResponse } from '../middlewares/common/decorateHtmlResponse.mjs';
-import { getUsers } from '../controller/usersController.mjs';
+import {
+  getUsers,
+  addUser,
+  removeUser,
+} from '../controller/usersController.mjs';
+import avatarUpload from '../middlewares/users/avatarUpload.mjs';
+import {
+  addUserValidators,
+  addUserValidationHandler,
+} from '../middlewares/users/userValidators.js';
+
+import { checkLogin } from '../middlewares/common/checkLogin.js';
 
 const router = express.Router();
 
 // user router
 
-export default router.get('/', decorateHtmlResponse('Users'), getUsers);
+router.get('/', decorateHtmlResponse('Users'), checkLogin, getUsers);
+
+router.post(
+  '/',
+  avatarUpload,
+  addUserValidators,
+  addUserValidationHandler,
+  addUser,
+);
+// remove user
+router.delete('/:id', removeUser);
+export default router;

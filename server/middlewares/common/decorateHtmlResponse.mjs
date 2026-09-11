@@ -7,9 +7,12 @@
 
 export function decorateHtmlResponse(pageTitle) {
   return function (req, res, next) {
-    console.log('1. Decorator called');
+    // console.log('1. Decorator called');
     res.locals.html = true;
     res.locals.title = `${pageTitle} - ${process.env.APP_NAME}`;
+    res.locals.loggedInUser = {};
+    res.locals.errors = {};
+    res.locals.data = {};
 
     next();
   };

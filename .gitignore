@@ -21,6 +21,9 @@ coverage/
 .env.*
 !.env.example
 
+data.txt
+uploads
+
 # Local overrides
 *.local
 
