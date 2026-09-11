@@ -16,7 +16,9 @@
 5. validation - validator expres
 6. Multer (multi file, file size limit)
 7. jsonwebtoken
-8. 
+8. socket
+9. debounce
+10. 
 
 
 ##  structure
