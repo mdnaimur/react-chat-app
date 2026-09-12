@@ -12,6 +12,10 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 
+import moment from 'moment';
+
+import { Server } from 'socket.io';
+
 // internal import
 import {
   errorHandler,
@@ -21,31 +25,59 @@ import {
 import loginRouter from './routers/loginRouter.js';
 import inboxRouter from './routers/inboxRouter.js';
 import usersRouter from './routers/usersRouter.js';
+import { createServer } from 'node:http';
 
 const app = express();
 
 dotenv.config();
 // console.log(process.env.NODE_ENV);
+
+// set static folder
+// --------------------------------------------------
+//  // Path setup //
+// --------------------------------------------------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// --------------------------------------------------
+// HTTP server + Socket.IO //
+// --------------------------------------------------
+
+const server = createServer(app);
+const io = new Server(server);
+
+global.io = io;
+
+// -------------------------------------------------- //
+//  App locals //
+// --------------------------------------------------
+app.locals.moment = moment;
+
+// --------------------------------------------------
+// // Database connection //
+// --------------------------------------------------
 //  database connection
 mongoose
   .connect(process.env.MONGO_CONNECTION_STRING)
   .then(() => console.log('database connection successful'))
   .catch((err) => console.log(err));
 
+// -------------------------------------------------- //
+// Request parsers //
+//  --------------------------------------------------
 // request parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// set view engine
+// --------------------------------------------------
+// // View engine //
+// --------------------------------------------------
 app.set('view engine', 'ejs');
 
-// set static folder
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, 'public')));
-
-// parse cookies
+// --------------------------------------------------
+// // Cookie parser //
+// --------------------------------------------------
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
