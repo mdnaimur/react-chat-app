@@ -20,8 +20,8 @@ export default function attachmentUpload(req, res, next) {
   upload.any()(req, res, (err) => {
     if (err) {
       return sendErrorResponse(res);
+    } else {
+      next();
     }
-    elseP;
-    next();
   });
 }

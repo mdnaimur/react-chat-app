@@ -111,20 +111,32 @@ export async function addConversation(req, res, next) {
 export async function getMessages(req, res, next) {
   try {
     const messages = await Message.find({
-      conversations_id: req.params.conversations_id,
+      conversation_id: req.params.conversation_id,
     }).sort('-createdAt');
 
-    const { participant } = await Conversation.findById(
-      req.params.conversations_id,
+    if (!messages) return res.status(404).json({ error: 'Message not found' });
+
+    // const { participant } = await Conversation.findById(
+    //   req.params.conversation_id,
+    // );
+
+    const conversation = await Conversation.findById(
+      req.params.conversation_id,
     );
+
+    if (!conversation) {
+      return res.status(404).json({
+        error: 'Conversation not found',
+      });
+    }
 
     res.status(200).json({
       data: {
-        messages: messages,
-        participant,
+        messages,
+        participant: conversation.participant,
       },
       user: req.user.userid,
-      conversations_id: req.params.conversations_id,
+      conversation_id: req.params.conversation_id,
     });
   } catch (error) {
     return sendErrorResponse(res);
@@ -158,13 +170,13 @@ export async function sendMessage(req, res, next) {
           name: req.body.username,
           avatar: req.body.avatar || null,
         },
-        conversations_id: req.body.coversationId,
+        conversation_id: req.body.coversationId,
       });
       const result = await newMessgae.save();
 
       global.io.emit('new_message', {
         message: {
-          conversations_id: req.body.conversations_id,
+          conversation_id: req.body.conversation_id,
           sender: {
             id: req.user.userid,
             name: req.user.username,

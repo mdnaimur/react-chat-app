@@ -94,6 +94,6 @@ app.use(notFoundHandler);
 // common error handler
 app.use(errorHandler);
 
-app.listen(process.env.PORT, () => {
-  console.log(`app listeting to http://localhost: ${process.env.PORT}`);
+server.listen(process.env.PORT, () => {
+  console.error(`app listening to http://localhost: ${process.env.PORT}`);
 });

@@ -12,6 +12,7 @@ import createError from 'http-errors';
 
 // internal import
 import User from '../models/Users.mjs';
+import Conversation from '../models/Conversation.js';
 
 export function getLogin(req, res, next) {
   console.log('2. Controller called');
@@ -36,10 +37,12 @@ export async function login(req, res, next) {
       if (isValidPassword) {
         // prepare the user object to generate token
         const userObj = {
+          userid: user._id,
           username: user.name,
           mobile: user.mobile,
           email: user.email,
-          role: 'user',
+          role: user.role || 'user',
+          avatar: user.avatar || null,
         };
         // generate token
         const token = jwt.sign(userObj, process.env.JWT_SECRET, {
@@ -56,7 +59,19 @@ export async function login(req, res, next) {
         // set logged in user local identifier
         res.locals.loggedInUser = userObj;
 
-        res.render('inbox');
+        // Get conversations of logged-in user
+        const conversations = await Conversation.find({
+          $or: [{ 'creator.id': user._id }, { 'participant.id': user._id }],
+        });
+
+        // console.log(data);
+        // console.log(Array.isArray(data));
+        // res.render('inbox');
+        // Render inbox with conversations
+        res.render('inbox', {
+          data: conversations,
+          loggedInUser: userObj,
+        });
       } else {
         throw createError(
           'Login failed! userId or password not found. Please try again',
