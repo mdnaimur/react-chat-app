@@ -6,6 +6,7 @@
  */
 
 /// internal import
+import createError from 'http-errors';
 import { escape } from '../utilities/escape.js';
 import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
@@ -61,6 +62,9 @@ export async function searchUser(req, res, next) {
       );
       res.json(users);
     } else {
+      // LEARNING: createError comes from 'http-errors'. Using it without an
+      // import throws ReferenceError ("createError is not defined") instead of
+      // a clean "provide some text" validation error.
       throw createError('You must provide some text to search!');
     }
   } catch (error) {
@@ -114,12 +118,8 @@ export async function getMessages(req, res, next) {
       conversation_id: req.params.conversation_id,
     }).sort('-createdAt');
 
-    if (!messages) return res.status(404).json({ error: 'Message not found' });
-
-    // const { participant } = await Conversation.findById(
-    //   req.params.conversation_id,
-    // );
-
+    // LEARNING: Model.find() always returns an array ([] if none). [] is truthy,
+    // so `if (!messages)` never runs. Empty chat is a valid conversation, not 404.
     const conversation = await Conversation.findById(
       req.params.conversation_id,
     );
@@ -146,37 +146,49 @@ export async function getMessages(req, res, next) {
 // send new message withs socket used
 
 export async function sendMessage(req, res, next) {
+  console.log(req.body);
   if (req.body.message || (req.files && req.files.length > 0)) {
     try {
       let attachment = null;
 
       if (req.files && req.files.length > 0) {
         attachment = [];
-        req.files.foreEach((file) => {
+        req.files.forEach((file) => {
           attachment.push(file.filename);
         });
       }
 
       const newMessgae = new Message({
         text: req.body.message,
-        attachment: attachment,
+        attachment,
         sender: {
           id: req.user.userid,
           name: req.user.username,
           avatar: req.user.avatar || null,
         },
         receiver: {
-          id: req.boyd.receiverId,
-          name: req.body.username,
+          id: req.body.receiverId,
+          // LEARNING: inbox.ejs FormData uses `receiverName`, not `username`.
+          // req.body.username is undefined, so receiver.name was saved as empty.
+          name: req.body.receiverName,
           avatar: req.body.avatar || null,
         },
-        conversation_id: req.body.coversationId,
+        conversation_id: req.body.conversationId,
       });
       const result = await newMessgae.save();
 
+      await Conversation.updateOne(
+        { _id: req.body.conversationId },
+        { last_updated: result.date_time },
+      );
+
       global.io.emit('new_message', {
         message: {
-          conversation_id: req.body.conversation_id,
+          // LEARNING: client sends conversationId (camelCase). Using
+          // conversation_id here made the socket payload undefined, so the
+          // inbox.ejs check `data.message.conversation_id == current_conversation_id`
+          // failed and live messages never appeared.
+          conversation_id: req.body.conversationId,
           sender: {
             id: req.user.userid,
             name: req.user.username,
@@ -193,7 +205,12 @@ export async function sendMessage(req, res, next) {
         data: result,
       });
     } catch (error) {
+      console.log('inside the controller sendmesage', error);
       return sendErrorResponse(res);
     }
+  } else {
+    // LEARNING: without this else, empty submit (no text, no files) never
+    // calls res.json(), so the browser fetch hangs until timeout.
+    return sendErrorResponse(res, 400);
   }
 }
